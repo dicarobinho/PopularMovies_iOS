@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TrailersCollectionItem" id="gTV-IL-0wX" customClass="TrailersCollectionItem" customModule="PopularMovies" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="267" height="104"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="267" height="104"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kgW-IO-xZs">
+                        <rect key="frame" x="0.0" y="0.0" width="267" height="104"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="e9H-es-xCL">
+                                <rect key="frame" x="16" y="9.5" width="30" height="84.5"/>
+                                <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="J4s-Vr-juX"/>
+                                </constraints>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YB9-hy-rhg">
+                                <rect key="frame" x="54" y="51.5" width="100" height="1"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="7hn-5d-sPt"/>
+                                    <constraint firstAttribute="height" constant="1" id="zXh-WE-tNc"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Official Trailer" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ngv-Wd-ObZ">
+                                <rect key="frame" x="62" y="27.5" width="189" height="24"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Youtube, Trailer" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3gT-Ym-N2C">
+                                <rect key="frame" x="62" y="52.5" width="189" height="14.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UD2-JD-88t">
+                                <rect key="frame" x="62" y="75" width="189" height="1"/>
+                                <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="3p5-hW-NEY"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="UD2-JD-88t" firstAttribute="leading" secondItem="e9H-es-xCL" secondAttribute="trailing" constant="16" id="6TE-z9-4Ut"/>
+                            <constraint firstItem="3gT-Ym-N2C" firstAttribute="top" secondItem="YB9-hy-rhg" secondAttribute="bottom" id="8FG-QL-njp"/>
+                            <constraint firstAttribute="bottom" secondItem="e9H-es-xCL" secondAttribute="bottom" constant="8" id="9av-hw-yMn"/>
+                            <constraint firstAttribute="trailing" secondItem="3gT-Ym-N2C" secondAttribute="trailing" constant="16" id="CwT-uQ-iuK"/>
+                            <constraint firstAttribute="trailing" secondItem="ngv-Wd-ObZ" secondAttribute="trailing" constant="16" id="DkI-yt-wUt"/>
+                            <constraint firstItem="3gT-Ym-N2C" firstAttribute="leading" secondItem="e9H-es-xCL" secondAttribute="trailing" constant="16" id="IpA-1j-NYq"/>
+                            <constraint firstItem="YB9-hy-rhg" firstAttribute="centerY" secondItem="e9H-es-xCL" secondAttribute="centerY" id="J60-Tr-chi"/>
+                            <constraint firstItem="YB9-hy-rhg" firstAttribute="leading" secondItem="e9H-es-xCL" secondAttribute="trailing" constant="8" symbolic="YES" id="LdS-kC-x4p"/>
+                            <constraint firstItem="e9H-es-xCL" firstAttribute="leading" secondItem="kgW-IO-xZs" secondAttribute="leading" constant="16" id="OPq-71-1fc"/>
+                            <constraint firstItem="YB9-hy-rhg" firstAttribute="top" secondItem="ngv-Wd-ObZ" secondAttribute="bottom" id="PaQ-CH-HfX"/>
+                            <constraint firstItem="e9H-es-xCL" firstAttribute="top" secondItem="kgW-IO-xZs" secondAttribute="top" constant="8" id="TBJ-Lf-Zcr"/>
+                            <constraint firstItem="ngv-Wd-ObZ" firstAttribute="leading" secondItem="e9H-es-xCL" secondAttribute="trailing" constant="16" id="j16-Vu-UB5"/>
+                            <constraint firstAttribute="trailing" secondItem="UD2-JD-88t" secondAttribute="trailing" constant="16" id="kDv-aZ-EdT"/>
+                            <constraint firstItem="UD2-JD-88t" firstAttribute="top" secondItem="3gT-Ym-N2C" secondAttribute="bottom" constant="8" id="mZT-li-Zq5"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="kgW-IO-xZs" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="BKx-vf-LeD"/>
+                <constraint firstAttribute="bottom" secondItem="kgW-IO-xZs" secondAttribute="bottom" id="I01-dl-oFh"/>
+                <constraint firstAttribute="trailing" secondItem="kgW-IO-xZs" secondAttribute="trailing" id="SfX-a9-ChN"/>
+                <constraint firstItem="kgW-IO-xZs" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="huB-zV-xWg"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <size key="customSize" width="267" height="104"/>
+            <connections>
+                <outlet property="trailerNameLabel" destination="ngv-Wd-ObZ" id="88b-94-KkM"/>
+                <outlet property="trailerTypeLabel" destination="3gT-Ym-N2C" id="JPM-D7-rcu"/>
+            </connections>
+            <point key="canvasLocation" x="81.884057971014499" y="101.78571428571428"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="play.fill" catalog="system" width="116" height="128"/>
+    </resources>
+</document>
