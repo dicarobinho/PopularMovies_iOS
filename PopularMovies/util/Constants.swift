@@ -19,4 +19,6 @@ class Constants {
     static let NO_REVIEWS = "No reviews available!"
     static let TOP_RATED = "Top Rated"
     static let POPULAR = "Popular"
+    static let FAVORITE = "Favorite"
+    static let NA = "N/A"
 }

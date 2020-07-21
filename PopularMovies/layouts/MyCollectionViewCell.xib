@@ -30,10 +30,20 @@
                         <color key="textColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Ubv-Yu-wsX">
+                        <rect key="frame" x="16" y="16" width="30" height="30"/>
+                        <color key="tintColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="30" id="8kk-tn-96C"/>
+                            <constraint firstAttribute="height" constant="30" id="Lhe-3u-8E6"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
             </view>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="wJN-t1-Yvv" secondAttribute="trailing" constant="16" id="BII-Dc-jrR"/>
+                <constraint firstItem="Ubv-Yu-wsX" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="16" id="JZz-5g-kew"/>
+                <constraint firstItem="Ubv-Yu-wsX" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="16" id="Qsf-QC-x9k"/>
                 <constraint firstAttribute="trailing" secondItem="eIs-60-8q3" secondAttribute="trailing" id="VIC-cK-sPJ"/>
                 <constraint firstItem="wJN-t1-Yvv" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="16" id="YIh-GK-OSj"/>
                 <constraint firstItem="eIs-60-8q3" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="fQa-Jw-dAn"/>
@@ -44,9 +54,13 @@
             <size key="customSize" width="193" height="217"/>
             <connections>
                 <outlet property="imageView" destination="eIs-60-8q3" id="LUb-ad-Lw1"/>
+                <outlet property="indicateMovieFavorite" destination="Ubv-Yu-wsX" id="X2p-Om-qZh"/>
                 <outlet property="indicateRatingLabel" destination="wJN-t1-Yvv" id="Grq-wU-u8b"/>
             </connections>
-            <point key="canvasLocation" x="209.42028985507247" y="98.102678571428569"/>
+            <point key="canvasLocation" x="208.69565217391306" y="97.767857142857139"/>
         </collectionViewCell>
     </objects>
+    <resources>
+        <image name="star.fill" catalog="system" width="128" height="116"/>
+    </resources>
 </document>

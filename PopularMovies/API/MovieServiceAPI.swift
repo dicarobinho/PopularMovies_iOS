@@ -97,7 +97,15 @@ class MovieServiceAPI {
         fetchResources(page, sortType, url: movieURL, completion: result)
     }
     
-    public func fetchVideos(_ idMovie: String, result: @escaping (Result<PageVideos, APIServiceError>) -> Void) {
+    public func fetchSpecificMovie(_ movieId:String, result: @escaping (Result<Movie, APIServiceError>) -> Void) {
+        let movieURL = baseURL
+            .appendingPathComponent(Endpoint.movie.rawValue)
+            .appendingPathComponent(movieId)
+        
+        fetchResources(1, Constants.NO_TYPE, url: movieURL, completion: result)
+    }
+    
+    public func fetchVideos(_ idMovie:String, result: @escaping (Result<PageVideos, APIServiceError>) -> Void) {
         let movieURL = baseURL
             .appendingPathComponent(Endpoint.movie.rawValue)
             .appendingPathComponent(idMovie)
@@ -107,7 +115,7 @@ class MovieServiceAPI {
         fetchResources(1, Constants.NO_TYPE, url: movieURL, completion: result)
     }
     
-    public func fetchReviews(_ idMovie: String, result: @escaping (Result<PageReviews, APIServiceError>) -> Void) {
+    public func fetchReviews(_ idMovie:String, result: @escaping (Result<PageReviews, APIServiceError>) -> Void) {
         let movieURL = baseURL
             .appendingPathComponent(Endpoint.movie.rawValue)
             .appendingPathComponent(idMovie)

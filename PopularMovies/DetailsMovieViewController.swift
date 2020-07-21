@@ -7,9 +7,9 @@
 //
 
 import UIKit
+import RealmSwift
 
 class DetailsMovieViewController: UIViewController {
-    
     
     @IBOutlet weak var collectionTrailersReviewsView: UICollectionView!
     
@@ -20,11 +20,10 @@ class DetailsMovieViewController: UIViewController {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var posterImageView: UIImageView!
     
-    var releaseYear:String!
-    var voteAverage:String!
-    var descriptionn:String!
-    var poster:URL!
-    var movieId:Int!
+    @IBOutlet weak var indicateMovieFavorite: UIButton!
+    var indicateMovieAsFavorite = false
+    
+    var selectedMovie:Movie!
     
     var pageVideos:PageVideos!
     var pageReviews:PageReviews!
@@ -37,12 +36,44 @@ class DetailsMovieViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        releaseYearLabel.text = releaseYear
-        voteAverageLabel.text = voteAverage
-        descriptionLabel.text = descriptionn
-        posterImageView.load(url: poster)
+        if getTheYearFromDate(selectedMovie.getReleaseDate()).isEmpty {
+            releaseYearLabel.text = Constants.NA
+        } else {
+            releaseYearLabel.text = getTheYearFromDate(selectedMovie.getReleaseDate())
+        }
+        
+        voteAverageLabel.text = formatVoteAverage(selectedMovie.getVoteAverage())
+        descriptionLabel.text = selectedMovie.getOverview()
+        posterImageView.load(url: getPosterUrl())
         
         getVideosFromServer()
+        
+        changeMovieFavoriteIndicator()
+    }
+    
+    //se executa cand dispare/se inchide view controller-ul
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if isBeingDismissed {
+            //ViewController.setUpFavoriteButton()
+        }
+    }
+    
+    //adaugare/stergere film (de) la favorite
+    @IBAction func markMoviesAsFavorite(_ sender: Any) {
+        
+        let realm = try! Realm()
+        let movie = Movie(selectedMovie.getId(), selectedMovie.getTitle(), selectedMovie.getPosterPath(), selectedMovie.getVoteAverage(), selectedMovie.getOverview(), selectedMovie.getReleaseDate(), selectedMovie.getPopularity())
+        
+        //marcheaza film ca favorit
+        if !indicateMovieAsFavorite {
+            changeFavoriteMovieStarIcon(true)
+            RealmDatabase.addMovieToDb(realm, movie)
+        //elimina film de la favorite
+        } else {
+            changeFavoriteMovieStarIcon(false)
+            RealmDatabase.deleteMovieFromDb(realm, movie)
+        }
     }
     
     @IBAction func trailersMovie(_ sender: Any) {
@@ -59,13 +90,21 @@ class DetailsMovieViewController: UIViewController {
         }
     }
     
+    func changeMovieFavoriteIndicator() {
+        //schimbam indicatorul de film favorit (yellow star)
+        let realm = try! Realm()
+        if RealmDatabase.verifyIfMovieExistInDb(realm, selectedMovie.getTitle()) {
+            changeFavoriteMovieStarIcon(true)
+        }
+    }
+    
     func scrollToTop() {
         //scroll to top
         self.collectionTrailersReviewsView.scrollToItem(at: NSIndexPath(item: 0, section:0) as IndexPath,at:.top,animated: true)
     }
     
     func getVideosFromServer() {
-        MovieServiceAPI.shared.fetchVideos(String(movieId)) { (result: Result<PageVideos, MovieServiceAPI.APIServiceError>) in
+        MovieServiceAPI.shared.fetchVideos(String(selectedMovie.getId())) { (result: Result<PageVideos, MovieServiceAPI.APIServiceError>) in
             switch result {
             case .success(let movieResponse):
                 
@@ -86,7 +125,7 @@ class DetailsMovieViewController: UIViewController {
     }
     
     func getReviewsFromServer() {
-        MovieServiceAPI.shared.fetchReviews(String(movieId)) { (result: Result<PageReviews, MovieServiceAPI.APIServiceError>) in
+        MovieServiceAPI.shared.fetchReviews(String(selectedMovie.getId())) { (result: Result<PageReviews, MovieServiceAPI.APIServiceError>) in
             switch result {
             case .success(let movieResponse):
                 
@@ -136,7 +175,7 @@ class DetailsMovieViewController: UIViewController {
         collectionTrailersReviewsView.dataSource = self
     }
     
-    // obtinel link-ul catre youtube
+    // obtine link-ul catre youtube
     func getYoutubeUrl(_ key:String) -> String {
         return Constants.BASE_YOUTUBE_URL + key
     }
@@ -153,6 +192,35 @@ class DetailsMovieViewController: UIViewController {
         } else {
             noTrailersReviewsLabel.isHidden = true
         }
+    }
+    
+    func changeFavoriteMovieStarIcon (_ disableEnable:Bool) {
+        if disableEnable {
+            indicateMovieAsFavorite = true
+            indicateMovieFavorite.setImage(UIImage(systemName: "star.fill"), for: .normal)
+        } else {
+            indicateMovieAsFavorite = false
+            indicateMovieFavorite.setImage(UIImage(systemName: "star"), for: .normal)
+        }
+    }
+    
+    // returnam adresa la care se gaseste posterul
+    // daca adresa poster-ului e nil, atunci returnam o adresa default
+    func getPosterUrl () -> URL {
+        if selectedMovie.posterPath != nil {
+            return URL(string: Constants.IMAGE_BASE_URL + selectedMovie.posterPath!)!
+        } else {
+            return URL(string: Constants.NO_PICTURE_AVAILABLE_ICON)!
+        }
+    }
+    
+    func getTheYearFromDate (_ date:String) -> String {
+        let array = date.components(separatedBy: "-")
+        return array[0]
+    }
+    
+    func formatVoteAverage (_ voteAverage:Float) -> String {
+        return "\(voteAverage)/10"
     }
 }
 

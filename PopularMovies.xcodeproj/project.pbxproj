@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3D275540773695182322FBE4 /* Pods_PopularMovies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC19C46342349A287FC70DC5 /* Pods_PopularMovies.framework */; };
+		7B2196EF24823B3600C7A7B5 /* RealmDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2196EE24823B3600C7A7B5 /* RealmDatabase.swift */; };
 		7BD95F1724653BFA00F5C089 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7BD95F1624653BFA00F5C089 /* Main.storyboard */; };
 		7BD95F192466970800F5C089 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD95F182466970800F5C089 /* Connection.swift */; };
 		FA550D6F2460511F00EBFAE5 /* ReviewsCollectionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA550D6D2460511F00EBFAE5 /* ReviewsCollectionItem.swift */; };
@@ -33,6 +34,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7B2196EE24823B3600C7A7B5 /* RealmDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDatabase.swift; sourceTree = "<group>"; };
 		7BD95F1624653BFA00F5C089 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../Main.storyboard; sourceTree = "<group>"; };
 		7BD95F182466970800F5C089 /* Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		CB3DD14E41884390B95C6ADA /* Pods-PopularMovies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PopularMovies.debug.xcconfig"; path = "Target Support Files/Pods-PopularMovies/Pods-PopularMovies.debug.xcconfig"; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 			children = (
 				FABCCC1C245ED18E005F9B09 /* Constants.swift */,
 				7BD95F182466970800F5C089 /* Connection.swift */,
+				7B2196EE24823B3600C7A7B5 /* RealmDatabase.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -304,6 +307,7 @@
 				FABCCC33245F5F14005F9B09 /* MovieServiceAPI.swift in Sources */,
 				FABCCC17245ED181005F9B09 /* PageReviews.swift in Sources */,
 				FABCCC18245ED181005F9B09 /* PageMovies.swift in Sources */,
+				7B2196EF24823B3600C7A7B5 /* RealmDatabase.swift in Sources */,
 				FA550D6F2460511F00EBFAE5 /* ReviewsCollectionItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

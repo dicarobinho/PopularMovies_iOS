@@ -8,6 +8,7 @@
 
 import UIKit
 import Reachability
+import RealmSwift
 
 class ViewController: UIViewController {
     
@@ -17,17 +18,26 @@ class ViewController: UIViewController {
     @IBOutlet weak var indicateMoviesTypeLabel: UILabel!
     @IBOutlet weak var noInternetConnectionLabel: UILabel!
     
+    
+    @IBOutlet weak var nextPageButton: UIBarButtonItem!
+    @IBOutlet weak var prevPageButton: UIBarButtonItem!
+    @IBOutlet weak var favoriteMoviesButton: UIBarButtonItem!
+    
     let numberOfGridViewColumns:CGFloat = 2
     
     var pageMovies:PageMovies!
+    var listWithFavoriteMovies = [Movie]()
+    
     var clickedItemIndex:Int!
     var currentMoviesPage:Int = 1
     
-    // 0 pentru popular, 1 pentru vote
+    // 0 pentru popular, 1 pentru vote, 2 pentru favorite
     var typeMovies:Int = 0
     var noInternetConnection:Bool = false
     
     var reachability = try! Reachability()
+    
+    let realm = try! Realm()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +48,9 @@ class ViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         connectionCheck()
+        //setUpFavoriteButton()
     }
     
     //functie unde se verifica conexiunea la internet
@@ -55,7 +67,7 @@ class ViewController: UIViewController {
                 if self.typeMovies == 0 {
                     self.getMoviesFromServer(self.currentMoviesPage, Constants.SORT_BY_POPULARITY)
                 } else {
-                   self.getMoviesFromServer(self.currentMoviesPage, Constants.SORT_BY_VOTE)
+                    self.getMoviesFromServer(self.currentMoviesPage, Constants.SORT_BY_VOTE)
                 }
             }
         }
@@ -78,19 +90,56 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func favoriteMovies(_ sender: Any) {
+        if typeMovies == 1 || typeMovies == 0 {
+            
+            typeMovies = 2
+            disableEnableTabButtons(false)
+            
+            let realm = try! Realm()
+            let moviesFromDb = RealmDatabase.getAllMoviesFromDb(realm)
+            
+            if moviesFromDb.count != 0 {
+                //ajutor pt identificarea ultimului film din array (solutie temporara)
+                var counter:Int = 0
+                for movie in moviesFromDb {
+                    counter += 1
+                    if counter < moviesFromDb.count {
+                        getSpecificMovieFromServer(String(movie.getId()), false)
+                    } else {
+                        getSpecificMovieFromServer(String(movie.getId()), true)
+                    }
+                }
+            } else {
+                 self.collectionMoviesView.reloadData()
+                 self.setUI()
+            }
+            
+            indicateMoviesTypeLabel.text = Constants.FAVORITE
+        }
+    }
+    
     @IBAction func topRatedMovies(_ sender: Any) {
-        if typeMovies == 0 {
+        if typeMovies == 0 || typeMovies == 2 {
+            typeMovies = 1
+            disableEnableTabButtons(true)
+            //setUpFavoriteButton()
+            
+            listWithFavoriteMovies.removeAll()
             getMoviesFromServer(currentMoviesPage, Constants.SORT_BY_VOTE)
             indicateMoviesTypeLabel.text = Constants.TOP_RATED
-            typeMovies = 1
         }
     }
     
     @IBAction func popularMovies(_ sender: Any) {
-        if typeMovies == 1 {
+        if typeMovies == 1 || typeMovies == 2 {
+            typeMovies = 0
+            disableEnableTabButtons(true)
+            //setUpFavoriteButton()
+            
+            listWithFavoriteMovies.removeAll()
             getMoviesFromServer(currentMoviesPage, Constants.SORT_BY_POPULARITY)
             indicateMoviesTypeLabel.text = Constants.POPULAR
-            typeMovies = 0
         }
     }
     
@@ -148,6 +197,27 @@ class ViewController: UIViewController {
         }
     }
     
+    func getSpecificMovieFromServer(_ movieId:String, _ lastMovie:Bool) {
+        MovieServiceAPI.shared.fetchSpecificMovie(movieId) { (result: Result<Movie, MovieServiceAPI.APIServiceError>) in
+            switch result {
+            case .success(let movieResponse):
+                
+                self.listWithFavoriteMovies.append(movieResponse)
+                
+                if lastMovie {
+                // rulam partea aceasta de cod in main thread
+                DispatchQueue.main.async {
+                    self.collectionMoviesView.reloadData()
+                    self.setUI()
+                    }
+                }
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
     func setSwipesMethods() {
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes))
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes))
@@ -175,38 +245,22 @@ class ViewController: UIViewController {
         collectionMoviesView.dataSource = self
     }
     
-    // trimitem informatia necesara catre view controller-ul indicat
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.destination is DetailsMovieViewController {
-            
-            let controller = segue.destination as! DetailsMovieViewController
-            
-            controller.releaseYear = getTheYearFromDate(pageMovies.results[clickedItemIndex].releaseDate)
-            controller.voteAverage = formatVoteAverage(String(pageMovies.results[clickedItemIndex].voteAverage))
-            controller.descriptionn = pageMovies.results[clickedItemIndex].overview
-            controller.poster = getPosterUrl(clickedItemIndex)
-            controller.movieId = pageMovies.results[clickedItemIndex].id
-        }
-    }
-    
     // returnam adresa la care se gaseste posterul
     // daca adresa poster-ului e nil, atunci returnam o adresa default
     func getPosterUrl (_ itemIndex: Int) -> URL {
-        if pageMovies.results[itemIndex].posterPath != nil {
-            return URL(string: Constants.IMAGE_BASE_URL + pageMovies.results[itemIndex].posterPath!)!
+        if typeMovies != 2 {
+            if pageMovies.results[itemIndex].posterPath != nil {
+                return URL(string: Constants.IMAGE_BASE_URL + pageMovies.results[itemIndex].posterPath!)!
+            } else {
+                return URL(string: Constants.NO_PICTURE_AVAILABLE_ICON)!
+            }
         } else {
-            return URL(string: Constants.NO_PICTURE_AVAILABLE_ICON)!
+            if listWithFavoriteMovies[itemIndex].posterPath != nil {
+                return URL(string: Constants.IMAGE_BASE_URL + listWithFavoriteMovies[itemIndex].posterPath!)!
+            } else {
+                return URL(string: Constants.NO_PICTURE_AVAILABLE_ICON)!
+            }
         }
-    }
-    
-    func getTheYearFromDate (_ date:String) -> String {
-        let array = date.components(separatedBy: "-")
-        return array[0]
-    }
-    
-    func formatVoteAverage (_ voteAverage:String) -> String {
-        return voteAverage + "/10"
     }
     
     func makeUiViewsRounded() {
@@ -240,6 +294,48 @@ class ViewController: UIViewController {
         label.layer.cornerRadius = 15
         label.clipsToBounds = true
     }
+    
+//    func disableEnableFavoriteMoviesButton(_ enable:Bool) {
+//        if enable {
+//            favoriteMoviesButton.isEnabled = true
+//        } else {
+//            favoriteMoviesButton.isEnabled = false
+//        }
+//    }
+    
+   func disableEnableTabButtons(_ enable:Bool){
+        if enable {
+            prevPageButton.isEnabled = true
+            nextPageButton.isEnabled = true
+            indicateMoviesPageLabel.isHidden = false
+        } else {
+            prevPageButton.isEnabled = false
+            nextPageButton.isEnabled = false
+            indicateMoviesPageLabel.isHidden = true
+        }
+    }
+    
+//    func setUpFavoriteButton() {
+//        if RealmDatabase.verifyIfDbIsClear(realm) {
+//            disableEnableFavoriteMoviesButton(false)
+//        } else {
+//            disableEnableFavoriteMoviesButton(true)
+//        }
+//    }
+    
+    // trimitem informatia necesara catre view controller-ul indicat
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.destination is DetailsMovieViewController {
+            
+            let controller = segue.destination as! DetailsMovieViewController
+            if typeMovies != 2 {
+                controller.selectedMovie = pageMovies.results[clickedItemIndex]
+            } else {
+                controller.selectedMovie = listWithFavoriteMovies[clickedItemIndex]
+            }
+        }
+    }
 }
 
 extension ViewController: UICollectionViewDelegate {
@@ -258,8 +354,10 @@ extension ViewController: UICollectionViewDelegate {
 extension ViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if noInternetConnection == false {
+        if noInternetConnection == false && typeMovies != 2 {
             return pageMovies.results.count
+        } else if noInternetConnection == false {
+            return listWithFavoriteMovies.count
         } else {
             return 0
         }
@@ -268,17 +366,34 @@ extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyCollectionViewCell.identifier, for: indexPath) as! MyCollectionViewCell
         
-        if pageMovies.results[indexPath.item].voteAverage != nil {
-            if pageMovies.results[indexPath.item].voteAverage == 10.0 {
-                cell.setRating(with: "10")
+        if typeMovies != 2 {
+            if pageMovies.results[indexPath.item].voteAverage != -1 {
+                if pageMovies.results[indexPath.item].voteAverage == 10.0 {
+                    cell.setRating(with: "10")
+                } else {
+                    cell.setRating(with: String(pageMovies.results[indexPath.item].voteAverage))
+                }
             } else {
-                cell.setRating(with: String(pageMovies.results[indexPath.item].voteAverage!))
+                cell.setRating(with: "0.0")
             }
+            
+            cell.setImage(with: getPosterUrl(indexPath.item))
+            cell.disableFavoriteMovieStar()
         } else {
-            cell.setRating(with: "0.0")
+            print(indexPath.item)
+            if listWithFavoriteMovies[indexPath.item].voteAverage != -1 {
+                if listWithFavoriteMovies[indexPath.item].voteAverage == 10.0 {
+                    cell.setRating(with: "10")
+                } else {
+                    cell.setRating(with: String(listWithFavoriteMovies[indexPath.item].voteAverage))
+                }
+            } else {
+                cell.setRating(with: "0.0")
+            }
+            
+            cell.setImage(with: getPosterUrl(indexPath.item))
+            cell.disableFavoriteMovieStar()
         }
-        
-        cell.setImage(with: getPosterUrl(indexPath.item))
         
         return cell
     }

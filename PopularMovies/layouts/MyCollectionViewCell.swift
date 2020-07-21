@@ -12,6 +12,7 @@ class MyCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var indicateRatingLabel: UILabel!
+    @IBOutlet weak var indicateMovieFavorite: UIImageView!
     
     static let identifier = "MyCollectionViewCell"
     
@@ -27,6 +28,14 @@ class MyCollectionViewCell: UICollectionViewCell {
     
     public func setRating(with text: String) {
         indicateRatingLabel.text = text
+    }
+    
+    public func disableFavoriteMovieStar() {
+        indicateMovieFavorite.isHidden = true
+    }
+    
+    public func enableFavoriteMovieStar() {
+        indicateMovieFavorite.isHidden = false
     }
     
     static func nib() -> UINib {
