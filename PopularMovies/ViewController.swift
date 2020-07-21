@@ -13,6 +13,7 @@ import RealmSwift
 class ViewController: UIViewController {
     
     //comment 1
+    //comment 2
     
     @IBOutlet weak var collectionMoviesView: UICollectionView!
     
