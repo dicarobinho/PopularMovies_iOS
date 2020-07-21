@@ -12,6 +12,8 @@ import RealmSwift
 
 class ViewController: UIViewController {
     
+    //comment 1
+    
     @IBOutlet weak var collectionMoviesView: UICollectionView!
     
     @IBOutlet weak var indicateMoviesPageLabel: UILabel!
